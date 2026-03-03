@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%yellow(%date{ISO8601} %d{z})][%magenta(${PID:- })][%highlight(%-5.5level)][%green(%15.15t)][%cyan(%45.45logger{44}):%4L]: %msg%n%throwable</pattern>
+        </encoder>
+    </appender>
+
+    <property name="LOG_DIR" value="logs" />
+    <property name="LOG_FILE" value="route-service.log" />
+
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${LOG_FILE}</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%date{ISO8601} %d{z}][${PID:- }][%-5.5level][%15.15t][%45.35logger{44}:%4L]: %msg%n%throwable</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_DIR}/archived/${LOG_FILE}-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <!-- each file should be at most 100MB, keep 20 days worth of history, but at most 2GB -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>20</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </root>
+
+</configuration>
